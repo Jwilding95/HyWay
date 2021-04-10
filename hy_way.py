@@ -43,14 +43,14 @@ def return_bazaar(funds=None, tax=1.25):
     bazaar_parse = [
         {
             "Product": re.sub('_', ' ', products[i]['quick_status']['productId']).lower().title(),
-            "Buy Price": Decimal(products[i]['quick_status']['buyPrice']).quantize(Decimal('.01')),
-            "Buy Volume": products[i]['quick_status']['buyVolume'],
-            "Bought/Week": products[i]['quick_status']['buyMovingWeek'],
-            "Buy Orders": products[i]['quick_status']['buyOrders'],
             "Sell Price": Decimal(products[i]['quick_status']['sellPrice']).quantize(Decimal('.01')),
             "Sell Volume": products[i]['quick_status']['sellVolume'],
             "Sold/Week": products[i]['quick_status']['sellMovingWeek'],
             "Sell Orders": products[i]['quick_status']['sellOrders'],
+            "Buy Price": Decimal(products[i]['quick_status']['buyPrice']).quantize(Decimal('.01')),
+            "Buy Volume": products[i]['quick_status']['buyVolume'],
+            "Bought/Week": products[i]['quick_status']['buyMovingWeek'],
+            "Buy Orders": products[i]['quick_status']['buyOrders'],
             "ROI": Decimal((products[i]['quick_status']['buyPrice'] - products[i]['quick_status']['sellPrice']) - ((products[i]['quick_status']['buyPrice'] - products[i]['quick_status']['sellPrice']) * (tax / 100))).quantize(Decimal('.01'))
         } for i in bazaar]
     
@@ -64,7 +64,7 @@ def return_bazaar(funds=None, tax=1.25):
     print(df.sort_values(by='ROI', ascending=False))
 
 # return_auctions("Hyperion")
-return_bazaar(50000)
+return_bazaar(150000)
 
 # TODO:
 # Divide funds by price, multiply ROI by ans, return dataframe by newly multiplied ROI (Repeat until depleted or cutoff)
