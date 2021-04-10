@@ -30,7 +30,7 @@ def return_auctions(lookup=None):
 
     print(f'Count: {n}')
 
-def return_bazaar(lookup=None):
+def return_bazaar(funds=None, tax=1.25):
     
     base_url = 'https://api.hypixel.net/skyblock/bazaar'
     base_response = requests.get(base_url)
@@ -51,18 +51,20 @@ def return_bazaar(lookup=None):
             "Sell Volume": products[i]['quick_status']['sellVolume'],
             "Sold/Week": products[i]['quick_status']['sellMovingWeek'],
             "Sell Orders": products[i]['quick_status']['sellOrders'],
-            "ROI": Decimal(products[i]['quick_status']['buyPrice'] - products[i]['quick_status']['sellPrice']).quantize(Decimal('.01'))
+            "ROI": Decimal((products[i]['quick_status']['buyPrice'] - products[i]['quick_status']['sellPrice']) - ((products[i]['quick_status']['buyPrice'] - products[i]['quick_status']['sellPrice']) * (tax / 100))).quantize(Decimal('.01'))
         } for i in bazaar]
     
     df = pd.DataFrame(bazaar_parse)
+    
+    if funds != None:
+        df = df[df["Buy Price"] <= funds]
     
     pd.set_option('display.max_rows', 500)
     
     print(df.sort_values(by='ROI', ascending=False))
 
 # return_auctions("Hyperion")
-return_bazaar()
+return_bazaar(50000)
 
 # TODO:
-# Get input of available funds
-# Divide funds by price, multiply ROI by ans, return dataframe by multiplied return (Repeat until depleted or cutoff)
+# Divide funds by price, multiply ROI by ans, return dataframe by newly multiplied ROI (Repeat until depleted or cutoff)
